@@ -104,7 +104,7 @@ models.defineModels mongoose, ->
   app.Category = Category = mongoose.model "Category"
   app.Exhibitor = Exhibitor = mongoose.model "Exhibitor"
   app.Item = Item = mongoose.model "Item"
-  app.User = User = mongoose.model "Administrator"
+  app.User = User = mongoose.model "User"
   app.LoginToken = LoginToken = mongoose.model "LoginToken"
   db = mongoose.connect app.set "db-uri"
 
