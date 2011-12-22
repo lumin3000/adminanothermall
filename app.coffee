@@ -624,6 +624,6 @@ app.post "/search.:format?", loadUser, (req, res) ->
         res.send "Format not available", 400
 
 #unless module.parent
-app.listen 3000
+app.listen 3001
 console.log "Express server listening on port %d, environment: %s", app.address().port, app.settings.env
 console.log "Using connect %s, Express %s, Jade %s", connect.version, express.version, jade.version

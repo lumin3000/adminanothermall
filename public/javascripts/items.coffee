@@ -58,6 +58,8 @@ modelSelector = (model)->
 
 (new modelSelector(modelName)).init() for modelName in ['exhibitor','category']
 
+$(document.body).click (e)->
+  console.log e.target
 
 class Item extends Spine.Model
   @configure "Item", "title", "category","exhibitor","price","size","delivery"
@@ -70,6 +72,7 @@ class Description extends Spine.Model
 class Descriptions extends Spine.Controller
   events:
     "click span": "remove"
+    "click  textarea":     "click"
     "blur  textarea":     "edit"
 
   elements:
@@ -78,7 +81,8 @@ class Descriptions extends Spine.Controller
   constructor: ->
     super
     @item.bind("destroy", @release)
-  
+  click:->#fix firefox's textarea cant get focus when clicked
+    @input.focus()  
   edit: ->
     @item.updateAttributes {word: @input.val()}
 
