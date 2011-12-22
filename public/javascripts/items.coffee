@@ -58,9 +58,6 @@ modelSelector = (model)->
 
 (new modelSelector(modelName)).init() for modelName in ['exhibitor','category']
 
-$(document.body).click (e)->
-  console.log e.target
-
 class Item extends Spine.Model
   @configure "Item", "title", "category","exhibitor","price","size","delivery"
   #@hasMany 'descriptions', 'models/description'
