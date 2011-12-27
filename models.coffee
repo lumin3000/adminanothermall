@@ -1,5 +1,4 @@
 crypto = require("crypto")
-Ticket = undefined
 Item = undefined
 Administrator = undefined
 LoginToken = undefined
@@ -22,38 +21,16 @@ extractKeywords = (text) ->
     a.lastIndexOf(v) is i
 
 defineModels = (mongoose, fn) ->
-  validatePresenceOf = (value) ->
-    value and value.length
+  validatePresenceOf = (value) ->value and value.length
   Schema = mongoose.Schema
   ObjectId = Schema.ObjectId
-
-  Ticket = new Schema
-    created_at:
-      type:Date
-      index:true
-    delivery_processing:
-      type:Boolean
-      default:true
-      index:true
-    pay_ref_url:String
-    item: [{ type: ObjectId, ref: 'Item' }]
-    exhibitor:[{ type: ObjectId, ref: 'Exhibitor' }]
-    delivery_at:Date
-
-  Ticket.pre "save", (next) ->
-    #auto change delivery status by delivery_at
-    @delivery_processing = false if @delivery_at
-    next()
-
-  Ticket.virtual("id").get ->
-    @_id.toHexString()
-
-
 
   Category = new Schema
     title:String
     created_at:Date
-    administrator: [{ type: ObjectId, ref: 'Administrator' }]
+    administrator:
+      type: ObjectId
+      ref: 'Administrator'
 
   Category.virtual("id").get ->
     @_id.toHexString()
@@ -72,11 +49,14 @@ defineModels = (mongoose, fn) ->
     pinyin_short:
       type:String
       index:true
+    administrator: 
+      type: ObjectId
+      ref: 'Administrator'
     pinyin:String
     summary:String
     image_url:String
     web_url:String
-    administrator: [{ type: ObjectId, ref: 'Administrator' }]
+
 
   Exhibitor.virtual("id").get ->
     @_id.toHexString()
@@ -96,11 +76,16 @@ defineModels = (mongoose, fn) ->
       default:false
       index:true 
     category:
-      type:[{ type: ObjectId, ref: 'Category' }]
+      type:ObjectId
+      ref:'Category'
       index:true
     exhibitor:
-      type:[{ type: ObjectId, ref: 'Exhibitor' }]
+      type:ObjectId
+      ref:'Exhibitor'
       index:true
+    administrator:
+      type: ObjectId
+      ref: 'Administrator'
     price: 
       type:Number
       min:0
@@ -113,7 +98,6 @@ defineModels = (mongoose, fn) ->
     update_at:Date
     sold_at:Date
     keywords: [ String ]
-    administrator: [{ type: ObjectId, ref: 'Administrator' }]
     pay_url:String
     pay_processing:
       type:Boolean
@@ -201,7 +185,6 @@ defineModels = (mongoose, fn) ->
       series: @series
   
   mongoose.model "Category", Category
-  mongoose.model "Ticket", Ticket
   mongoose.model "Exhibitor", Exhibitor
   mongoose.model "Item", Item
   mongoose.model "Administrator", Administrator

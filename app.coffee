@@ -447,10 +447,11 @@ app.get "/items/new", loadUser, (req, res) ->
 
 #create 
 app.post "/items", loadUser, (req, res) ->
+  ['categoryname','exhibitorname'].forEach (el)->delete req.body[el]
   d = new Item req.body
-  d.created_at = new Date()
-  d.administrator = req.currentUser
-  d.data = d.data[0]
+  d.created_at=new Date()
+  d.administrator=req.currentUser
+  d.data=d.data[0]
   tmp_data = JSON.parse(d.data)[0]
   d.summary = tmp_data.word
   d.image_url = tmp_data.image
@@ -467,13 +468,14 @@ app.get "/items/:id.:format?/edit", loadUser, (req, res, next) ->
       res.redirect "/items"      
     else
       Item.findOne({_id: req.params.id}).populate('category').run (err,one)->
-        d.categoryname = one.category[0].title if !err && one.category[0].title
+        d.categoryname = one.category.title if !err && one.category.title
         Item.findOne({_id: req.params.id}).populate('exhibitor').run (err,one)->
-          d.exhibitorname = one.exhibitor[0].title if !err && one.exhibitor[0].title
+          d.exhibitorname = one.exhibitor.title if !err && one.exhibitor.title
           res.render "items/edit.jade",{locals:{d: d,currentUser: req.currentUser}}
 
 #Edit
 app.put "/items/:id.:format?", loadUser, (req, res) ->
+  ['categoryname','exhibitorname'].forEach (el)->delete req.body[el]
   Item.findOne
     _id: req.params.id
   , (err, d) ->
@@ -486,6 +488,7 @@ app.put "/items/:id.:format?", loadUser, (req, res) ->
     tmp_data = JSON.parse(d.data)[0]
     d.summary = tmp_data.word
     d.image_url = tmp_data.image
+    console.log "d.exhibitorname:"+d.exhibitorname+';;'
     d.save (err) ->
       switch req.params.format
         when "json"
