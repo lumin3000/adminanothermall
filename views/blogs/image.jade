@@ -1,0 +1,72 @@
+!!!
+html
+  head
+    script(src='/javascripts/jquery-1.6.2.js', type='text/javascript')
+    style
+      .newimage{margin-top:10px}
+      .newimagesrc {width:550px}
+      img {vertical-align:top}
+    title= (d.image||'')
+    #container
+      h1 上传博客图片
+      div
+        a(href='/')返回首页
+      form(method='post', enctype='multipart/form-data', action=d.action, onsubmit="return beforeSubmit(this)")
+        p
+          input(name='image', type='file')
+        p
+          input(value='Upload Image', type='submit')
+        - if(d.image)
+            .newimage
+              label 100
+              input.newimagesrc(value='/img/'+d.image+'_0.jpg')
+            .newimage
+              label 200
+              input.newimagesrc(value='/img/'+d.image+'_1.jpg')
+            .newimage
+              label 300
+              input.newimagesrc(value='/img/'+d.image+'_2.jpg')
+            .newimage
+              label 400
+              input.newimagesrc(value='/img/'+d.image+'_3.jpg')  
+            .newimage
+              label 500
+              input.newimagesrc(value='/img/'+d.image+'_4.jpg')
+            .newimage
+              label 600
+              input.newimagesrc(value='/img/'+d.image+'_5.jpg')
+            .newimage
+              label 960
+              input.newimagesrc(value='/img/'+d.image+'_6.jpg')
+            .newimage 100
+              img(src='/img/'+d.image+'_0.jpg')
+            .newimage 200
+              img(src='/img/'+d.image+'_1.jpg')
+            .newimage 300
+              img(src='/img/'+d.image+'_2.jpg')
+            .newimage 400
+              img(src='/img/'+d.image+'_3.jpg')
+            .newimage 500
+              img(src='/img/'+d.image+'_4.jpg')
+            .newimage 600
+              img(src='/img/'+d.image+'_5.jpg')
+            .newimage 960
+              img(src='/img/'+d.image+'_6.jpg')
+            script(type='text/javascript')
+              (function(){
+                $('.newimagesrc').mouseup(function(){this.select()});
+                var dom = $('.newimagesrc');
+                for(var i = 0; i< dom.length; i++)
+                {
+                  dom[i].value = '![]('+'http://kuanmall.com'+dom[i].value+')';
+                }
+              })()
+
+
+  script(type='text/javascript')
+    var beforeSubmit = function(form){
+      if(!form.image.value)
+        return false
+      return true
+    }
+       
