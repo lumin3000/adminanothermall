@@ -98,6 +98,7 @@ GridFS = new GridFS('anothermall_images')
 
 Image_exhibitor_size = [36,180]
 Image_item_size = [180,500,960]
+Image_blog_size = [100,200,300,400,500,600,960]
 
 #load models
 models.defineModels mongoose, ->
@@ -155,6 +156,9 @@ NotFound = (msg) ->
 
 
 #helper
+saveBlogPicture = (file,imagename_mongod,next)->
+  saveImage file,imagename_mongod,Image_blog_size,next
+
 saveItemPicture = (file,imagename_mongod,next)->
   saveImage file,imagename_mongod,Image_item_size,next
 
@@ -207,6 +211,26 @@ app.get "/img/:id",(req,res)->
     res.end filedata, 'binary'
     #fs.writeFile './tmp/'+imagename_mongod,filedata,'binary',(err)->
       #console.log "writeLocalImageFile ok~"
+
+
+
+
+#create new Blog photo
+app.post "/blogs/image",loadUser,(req, res) ->
+  file = req.body.image.path
+  imagename_mongod = file.replace('/tmp/','blog_')+parseInt(Math.random()*10000)
+  saveBlogPicture file,imagename_mongod, ->
+    res.redirect "/blogs/image/#{imagename_mongod}"
+
+
+#the page for Blog photo creating and editing
+app.get "/blogs/image/:id",loadUser,(req, res)->
+  d = {action:"/blogs/image"}
+  d.image = req.params.id if parseInt(req.params.id)!=0
+  res.render 'blogs/image.jade',
+    locals:{d:d}
+    layout:false 
+
 
 
 ###
